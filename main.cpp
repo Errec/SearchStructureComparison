@@ -1,9 +1,10 @@
 #include <fstream>
 #include <iostream>
 #include <iterator>
-#include <random>
 #include <string>
 #include <vector>
+#include <stdio.h>      /* printf, NULL */
+#include <stdlib.h>     /* srand, rand */
 
 using namespace std;
 
@@ -34,9 +35,10 @@ int setNumberOfElements(){
 }
 
 void populateRdn(int k,vector<int> &elements){
+  srand(1);
   for(int i = 0; i < k; i++)
   {
-    /* code */
+    elements[i] = rand()%100;
   }
 }
 
