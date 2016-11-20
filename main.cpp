@@ -8,45 +8,82 @@
 
 using namespace std;
 
-inline int setNumberOfElements();
-void populateRdn(int ,vector<int> &);
-void insertSS(int ,vector<int> &);
-void insertBS(int ,vector<int> &);
-void insertBT(int ,vector<int> &);
+inline int SetNumberOfElements();
+inline int SetKey();
+void PopulateRdn(int, vector<int> &);
+void InsertSequencialSearch(int, vector<int> &, vector<int> &);
+void InsertBinarySearch(int, vector<int> &);
+void InsertBinaryTree(int, vector<int> &);
+bool SequencialSearch(int, int, vector<int> &);
 
 int main() {
   int k; // Number of elements inserted in the data structures
-  k = setNumberOfElements();
+  k = SetNumberOfElements();
+
+  int key; // Key to be found in the vectors
+  key = SetKey();
 
   vector<int> elements(k); // store the chars of the string line
-  populateRdn(k, elements);
+  PopulateRdn(k, elements);
+
+  vector<int> vecSS;
+  vector<int> vecBS;
+  vector<int> vecBT;
+
+  InsertSequencialSearch(k, elements, vecSS);
+  if(SequencialSearch(k, key, vecSS)){
+    cout << "Number " << key << " found in Xms" << endl;
+  } else{
+      cout << "Number " << key << " not found.\nTotal time: Xms" << endl;
+  }
 
   return 0;
 }
 
-int setNumberOfElements(){
+inline int SetNumberOfElements(){
   int n;
   do{
-    cout << "Enter a non-negative number:\n";
+    cout << "Enter a non-negative number:";
     cin >> n;
   }while(cin && n < 0);
-
   return n;
 }
 
-void populateRdn(int k,vector<int> &elements){
+inline int SetKey(){
+  int n;
+  do{
+    cout << "Search for positive number:";
+    cin >> n;
+  }while(cin && n < 0);
+  return n;
+}
+
+void PopulateRdn(int k,vector<int> &elements){
   srand(1);
-  for(int i = 0; i < k; i++)
-  {
+  for(int i = 0; i < k; i++){
     elements[i] = rand()%100;
   }
 }
 
-void insertSS(int k,vector<int> &elements){
+void InsertSequencialSearch(int k, vector<int> &elements, vector<int> &vecSS){
+  for(int i = 0; i < k; i++){
+    vecSS.push_back(elements[i]);
+    printf("%d ", vecSS[i]);
+  }
+  cout << endl;
 }
 
-void insertBS(int k,vector<int> &elements){
+bool SequencialSearch(int k, int key, vector<int> &vecSS){
+  for (int i = 0; i < k; i++){
+    if (key == vecSS[i]){
+      return true;
+    }
+  }
+  return false;
 }
 
-void insertBT(int k,vector<int> &elements){
+void InsertBinarySearch(int k,vector<int> &elements){
+}
+
+void InsertBinaryTree(int k,vector<int> &elements){
 }
