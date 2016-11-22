@@ -1,4 +1,5 @@
 #include <fstream>
+#include <ctime>
 #include <iostream>
 #include <cstdlib>
 #include <iterator>
@@ -91,35 +92,46 @@ void BinarySearchTree::searchData(int d){
 inline int SetNumberOfElements();
 inline int SetKey();
 void PopulateRdn(int, vector<int> &);
-void InsertSequencialSearch(int, vector<int> &, vector<int> &);
-void InsertBinarySearch(int, vector<int> &, vector<int> &);
+float getTime();
+void InsertVectorSequencial(int, vector<int> &, vector<int> &);
+void InsertVectorBinary(int, vector<int> &, vector<int> &);
 void InsertBinaryTree(int, vector<int> &, BinarySearchTree &);
 void SequencialSearch(int, int, vector<int> &);
 void BinarySearch(int, int, vector<int> &);
 void BinaryTreeSearch(int, BinarySearchTree &);
 
 int main() {
-  int k; // Number of elements inserted in the data structures
-  k = SetNumberOfElements();
-
-  int key; // Key to be found in the vectors
-  key = SetKey();
+  int k = SetNumberOfElements(); // Number of elements inserted in the data structures
+  int key = SetKey(); // Key to be found in the vectors
 
   vector<int> elements(k);
   PopulateRdn(k, elements);
 
-  vector<int> vecSS;
-  InsertSequencialSearch(k, elements, vecSS);
-  SequencialSearch(k, key, vecSS);
+  cout.precision(3);
 
+  vector<int> vecSS;
+  float s = getTime();
+  InsertVectorSequencial(k, elements, vecSS);
+  cout << " InsertVectorSequencial:." << fixed << (getTime() - s)*1000 << " ms"<< endl;
+  s = getTime();
+  SequencialSearch(k, key, vecSS);
+  cout << " SequencialSearch:......." << fixed << (getTime() - s)*1000 << " ms"<< endl << endl;
 
   vector<int> vecBS;
-  InsertBinarySearch(k, elements, vecBS);
+  s = getTime();
+  InsertVectorBinary(k, elements, vecBS);
+  cout << " InsertVectorBinary:....." << fixed << (getTime() - s)*1000 << " ms"<< endl;
+  s = getTime();
   BinarySearch(k, key, vecBS);
+  cout << " BinarySearch:..........." << fixed << (getTime() - s)*1000 << " ms"<< endl << endl;
 
   BinarySearchTree bTree;
+  s = getTime();
   InsertBinaryTree(k, elements, bTree);
+  cout << " InsertBinaryTree:......." << fixed << (getTime() - s)*1000 << " ms"<< endl;
+  s = getTime();
   BinaryTreeSearch(key, bTree);
+  cout << " BinaryTreeSearch:......." << fixed << (getTime() - s)*1000 << " ms"<< endl << endl;
 
   return 0;
 }
@@ -138,6 +150,7 @@ inline int SetKey(){
   do{
     cout << "Search for positive number:";
     cin >> n;
+    cout << endl;
   }while(cin && n < 0);
   return n;
 }
@@ -149,7 +162,12 @@ void PopulateRdn(int k,vector<int> &elements){
   }
 }
 
-void InsertSequencialSearch(int k, vector<int> &elements, vector<int> &vecSS){
+float getTime(){
+  clock_t start = clock();
+  return (float)start / CLOCKS_PER_SEC;
+}
+
+void InsertVectorSequencial(int k, vector<int> &elements, vector<int> &vecSS){
   for(int i = 0; i < k; i++){
     vecSS.push_back(elements[i]);
   }
@@ -163,7 +181,10 @@ void SequencialSearch(int k, int key, vector<int> &vecSS){
   }
 }
 
-void InsertBinarySearch(int k, vector<int> &elements, vector<int> &vecBS){
+// The complexity of doing this is O(log N) for the upper_bound search (finding where to insert) and
+// Up to O(N) for the insert itself. http://stackoverflow.com/a/25524075/6222908
+// upper_bound() implementation: http://en.cppreference.com/w/cpp/algorithm/upper_bound
+void InsertVectorBinary(int k, vector<int> &elements, vector<int> &vecBS){
   for (int i = 0; i < k; i++){
     vecBS.insert(upper_bound(vecBS.begin(), vecBS.end(), elements[i]), elements[i]);
   }
