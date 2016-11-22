@@ -89,9 +89,8 @@ void BinarySearchTree::searchData(int d){
   }
 }
 
-inline int SetNumberOfElements();
-inline int SetKey();
-void PopulateRdn(int, vector<int> &);
+void SpeedTest(int);
+void PopulateRdn(int, int, vector<int> &);
 float getTime();
 void InsertVectorSequencial(int, vector<int> &, vector<int> &);
 void InsertVectorBinary(int, vector<int> &, vector<int> &);
@@ -100,65 +99,64 @@ void SequencialSearch(int, int, vector<int> &);
 void BinarySearch(int, int, vector<int> &);
 void BinaryTreeSearch(int, BinarySearchTree &);
 
-int main() {
-  int k = SetNumberOfElements(); // Number of elements inserted in the data structures
-  int key = SetKey(); // Key to be found in the vectors
+int main(){
+  cout << endl;
+  SpeedTest(10);
+  SpeedTest(100);
+  SpeedTest(1000);
+  SpeedTest(10000);
 
-  vector<int> elements(k);
-  PopulateRdn(k, elements);
+  return 0;
+}
+
+void SpeedTest(int k){
+  vector<int> elementsToInsert(k);
+  int seedInsert = 1;
+  PopulateRdn(seedInsert, k, elementsToInsert);
+
+  int seedSearch = 2;
+  vector<int> elementsToSearch(k);
+  PopulateRdn(seedSearch, k, elementsToSearch);
+
+  cout << "\tTesting for "<< k << " elements" << endl << endl;
 
   cout.precision(3);
 
   vector<int> vecSS;
   float s = getTime();
-  InsertVectorSequencial(k, elements, vecSS);
-  cout << " InsertVectorSequencial:." << fixed << (getTime() - s)*1000 << " ms"<< endl;
+  InsertVectorSequencial(k, elementsToInsert, vecSS);
+  cout << "\tInsertVectorSequencial:." << fixed << (getTime() - s) * 1000 << " ms" << endl;
   s = getTime();
-  SequencialSearch(k, key, vecSS);
-  cout << " SequencialSearch:......." << fixed << (getTime() - s)*1000 << " ms"<< endl << endl;
+  for(int i = 0; i < k; i++){
+    SequencialSearch(k, elementsToSearch[i], vecSS);
+  }
+  cout << "\tSequencialSearch:......." << fixed << (getTime() - s) * 1000 << " ms" << endl << endl;
 
   vector<int> vecBS;
   s = getTime();
-  InsertVectorBinary(k, elements, vecBS);
-  cout << " InsertVectorBinary:....." << fixed << (getTime() - s)*1000 << " ms"<< endl;
+  InsertVectorBinary(k, elementsToInsert, vecBS);
+  cout << "\tInsertVectorBinary:....." << fixed << (getTime() - s) * 1000 << " ms" << endl;
   s = getTime();
-  BinarySearch(k, key, vecBS);
-  cout << " BinarySearch:..........." << fixed << (getTime() - s)*1000 << " ms"<< endl << endl;
+  for(int i = 0; i < k; i++){
+    BinarySearch(k, elementsToSearch[i], vecBS);
+  }
+  cout << "\tBinarySearch:..........." << fixed << (getTime() - s) * 1000 << " ms" << endl << endl;
 
   BinarySearchTree bTree;
   s = getTime();
-  InsertBinaryTree(k, elements, bTree);
-  cout << " InsertBinaryTree:......." << fixed << (getTime() - s)*1000 << " ms"<< endl;
+  InsertBinaryTree(k, elementsToInsert, bTree);
+  cout << "\tInsertBinaryTree:......." << fixed << (getTime() - s) * 1000 << " ms" << endl;
   s = getTime();
-  BinaryTreeSearch(key, bTree);
-  cout << " BinaryTreeSearch:......." << fixed << (getTime() - s)*1000 << " ms"<< endl << endl;
-
-  return 0;
-}
-
-inline int SetNumberOfElements(){
-  int n;
-  do{
-    cout << "Enter a non-negative number:";
-    cin >> n;
-  }while(cin && n < 0);
-  return n;
-}
-
-inline int SetKey(){
-  int n;
-  do{
-    cout << "Search for positive number:";
-    cin >> n;
-    cout << endl;
-  }while(cin && n < 0);
-  return n;
-}
-
-void PopulateRdn(int k,vector<int> &elements){
-  srand(1);
   for(int i = 0; i < k; i++){
-    elements[i] = rand()%100;
+    BinaryTreeSearch(elementsToSearch[i], bTree);
+  }
+  cout << "\tBinaryTreeSearch:......." << fixed << (getTime() - s) * 1000 << " ms" << endl << endl << endl;
+}
+
+void PopulateRdn(int seed, int k,vector<int> &elements){
+  srand(seed);
+  for(int i = 0; i < k; i++){
+    elements[i] = rand();
   }
 }
 
