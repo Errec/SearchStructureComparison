@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <cstdlib>
 #include <iterator>
 #include <string>
 #include <vector>
@@ -9,14 +10,93 @@
 
 using namespace std;
 
+class BinarySearchTree{
+  private: struct tree_node{
+    tree_node* left;
+    tree_node* right;
+    int data;
+  };
+
+  tree_node* root;
+
+  public: BinarySearchTree(){
+    root = NULL;
+  }
+
+  bool isEmpty() const{
+    return root == NULL;
+  }
+
+  void insertData(int);
+  void searchData(int);
+};
+
+void BinarySearchTree::insertData(int d){
+  tree_node* t = new tree_node;
+  tree_node* parent;
+  t->data = d;
+  t->left = NULL;
+  t->right = NULL;
+  parent = NULL;
+
+  // is this a new tree?
+  if(isEmpty()) root = t;
+  else
+  {
+    //Note: ALL insertions are as leaf nodes
+    tree_node* curr;
+    curr = root;
+    // Find the Node's parent
+    while(curr){
+      parent = curr;
+
+      if(t->data > curr->data){
+        curr = curr->right;
+      }else{
+        curr = curr->left;
+      }
+    }
+
+    if(t->data < parent->data){
+      parent->left = t;
+    }else{
+       parent->right = t;
+     }
+  }
+}
+
+void BinarySearchTree::searchData(int d){
+  //Locate the element
+  bool found = false;
+
+  tree_node* curr;
+  tree_node* parent;
+  curr = root;
+
+  while(curr != NULL){
+   if(curr->data == d){
+      found = true;
+      break;
+   }else{
+      parent = curr;
+      if(d > curr->data){
+        curr = curr->right;
+     }else{
+        curr = curr->left;
+      }
+    }
+  }
+}
+
 inline int SetNumberOfElements();
 inline int SetKey();
 void PopulateRdn(int, vector<int> &);
 void InsertSequencialSearch(int, vector<int> &, vector<int> &);
 void InsertBinarySearch(int, vector<int> &, vector<int> &);
-void InsertBinaryTree(int, vector<int> &);
+void InsertBinaryTree(int, vector<int> &, BinarySearchTree &);
 void SequencialSearch(int, int, vector<int> &);
 void BinarySearch(int, int, vector<int> &);
+void BinaryTreeSearch(int, BinarySearchTree &);
 
 int main() {
   int k; // Number of elements inserted in the data structures
@@ -37,7 +117,9 @@ int main() {
   InsertBinarySearch(k, elements, vecBS);
   BinarySearch(k, key, vecBS);
 
-  vector<int> vecBT;
+  BinarySearchTree bTree;
+  InsertBinaryTree(k, elements, bTree);
+  BinaryTreeSearch(key, bTree);
 
   return 0;
 }
@@ -91,11 +173,10 @@ void BinarySearch(int k, int key, vector<int> &vecBS){
   int i = 0;
   int left = 0;
   int right = k - 1;
-  int middle;
 
   while(left <= right){
     i++;
-    middle = (int)((left + right) / 2);
+    int middle = (int)((left + right) / 2);
     if (key == vecBS[middle]){
       i++;
       break;
@@ -109,5 +190,12 @@ void BinarySearch(int k, int key, vector<int> &vecBS){
   }
 }
 
-void InsertBinaryTree(int k,vector<int> &elements){
+void InsertBinaryTree(int k, vector<int> &elements, BinarySearchTree &bTree){
+  for(int i = 0; i < k; i++){
+    bTree.insertData(elements[i]);
+  }
+}
+
+void BinaryTreeSearch(int key, BinarySearchTree &bTree){
+  bTree.searchData(key);
 }
